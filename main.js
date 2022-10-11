@@ -1,26 +1,34 @@
 #!/usr/bin/env node
+const lib = require("./lib")
 
-const https = require("https")
-const parser = require("node-html-parser")
-const url = `https://www.skku.edu/skku/campus/skk_comm/notice01.do`;
-const header = {
-    headers: {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
-    }
+if (process.argv.length <= 3) {
+    console.log("Insufficient parameter!")
+    process.exit(1);
 }
 
-https.get(
-    url, header, (res) => {
-        let data = "";
-        res.on("data", (chunk) => {
-            data += chunk;
-        });
-        res.on ("end", () => {
-            const root = parser.parse(data);
-            const list = root.querySelectorAll(".board-list-content-title > a");
-            list.forEach((item) => {
-                console.log(item.innerText.trim())
-            });
-        });
-    }
-);
+let command = process.argv[2]
+
+let numbers = process.argv.slice(3, process.argv.length).map((n) => parseFloat(n));
+
+if (numbers.some((n) => isNaN(n))) {
+    console.log("Some arguments are not numbers!")
+    process.exit(1)
+}
+
+let result
+switch (command) {
+    case "sum":
+        result = lib.sum(numbers);
+        break;
+    case "avg":
+        result = lib.avg(numbers);
+        break;
+    case "max":
+        result = lib.max(numbers);
+        break;
+    default:
+        console.log("Wrong command!")
+        process.exit(1)
+}
+
+console.log(result)
