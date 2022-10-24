@@ -30,17 +30,17 @@ test("iqr([2, 4.5, 3]) should be 2.5", () => {
 })
 
 test("outlier([1, 2, 3, 4, 100]) should be ", () => {
-    expect(lib.outlier([1, 2, 3, 4, 100])).toBe();
+    expect(lib.outlier([1, 2, 3, 4, 100])).toStrictEqual([]);
 })
 
 test("outlier([1, 1, 1, 1, 1, 1, 1, 1, 1, 101, 100]) should be ", () => {
-    expect(lib.outlier([1, 1, 1, 1, 1, 1, 1, 1, 1, 101, 100])).toBe('101\n100');
+    expect(lib.outlier([1, 1, 1, 1, 1, 1, 1, 1, 1, 101, 100])).toStrictEqual([101, 100]);
 })
 
 test("outlier([-17, -5, -2, 1, 2, 3, 4]) should be ", () => {
-    expect(lib.outlier([-17, -5, -2, 1, 2, 3, 4])).toBe();
+    expect(lib.outlier([-17, -5, -2, 1, 2, 3, 4])).toStrictEqual([]);
 })
 
 test("outlier([-18, -5, -2, 1, 2, 3, 4]) should be ", () => {
-    expect(lib.outlier([-18, -5, -2, 1, 2, 3, 4])).toBe(-18);
+    expect(lib.outlier([-18, -5, -2, 1, 2, 3, 4])).toStrictEqual([-18]);
 })

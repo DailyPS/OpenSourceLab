@@ -33,6 +33,7 @@ function iqr(numbers) {
 
 function outlier(numbers) {
     var cal_numbers = numbers.slice()
+    var ret = []
 
     let len = cal_numbers.length
     let IQR = iqr(cal_numbers)
@@ -42,8 +43,10 @@ function outlier(numbers) {
     var step;
     for (step = 0; step < len; step++) {
         if (numbers[step] < Q1 - 1.5 * IQR || numbers[step] > Q2 + 1.5 * IQR)
-            console.log(numbers[step])
+            ret.push(numbers[step])
     }
+
+    return ret
 }
 
 module.exports = {

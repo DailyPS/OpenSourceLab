@@ -40,6 +40,12 @@ switch (command) {
         process.exit(1)
 }
 
-if (result != undefined) {
+if (typeof result === 'number') {
     console.log(result)
+}
+
+else if (typeof result === 'object') {
+    var step
+    for (step = 0; step < result.length; step++)
+        console.log(result[step])
 }
