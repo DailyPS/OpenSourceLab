@@ -33,7 +33,15 @@
                 <div class="flex-grow-1 bg-light rounded-2 p-2 me-1 w-50">
                     <h3>Todos</h3>
                     <div id="todo-list">
-                        <div class="task bg-light p-1 rounded-2 ps-2">Sample task</div>
+                        <div class="task bg-light p-1 rounded-2 ps-2 d-flex align-items-center">
+                            <span class="me-auto">Task text</span>
+                            <button class="btn btn-sm btn-success me-1">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="flex-grow-1 bg-light rounded-2 p-2 w-50">
@@ -46,26 +54,88 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.main.js" crossorigin="anonymous"></script>
 
         <script>
+            const Type = {
+                Todo: 1,
+                Done: 2,
+            };
+    
+            let tasks = [];
+    
+            function loadTasks() {
+                let lastTasks = localStorage.getItem("tasks");
+                if (!lastTasks) return;
+    
+                tasks = JSON.parse(lastTasks);
+                tasks.forEach(addToList);
+            }
+    
+            function saveTasks() {
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+            }
+    
+            function addToList(task) {
+                let div = document.createElement("div");
+                div.className = "task bg-light p-1 rounded-2 ps-2 d-flex align-items-center";
+    
+                let span = document.createElement("span");
+                span.className = "me-auto";
+                span.textContent = task.text;
+                div.appendChild(span);
+    
+                if (task.type === Type.Todo) {
+                    let buttonDone = document.createElement("button");
+                    buttonDone.className = "btn btn-sm btn-success me-1";
+                    buttonDone.innerHTML = '<i class="bi bi-check"></i>';
+                    div.appendChild(buttonDone);
+    
+                    buttonDone.addEventListener("click", () => {
+                        /* TODO */
+                    });
+                }
+    
+                let buttonRemove = document.createElement("button");
+                buttonRemove.className = "btn btn-sm btn-danger";
+                buttonRemove.innerHTML = '<i class="bi bi-x"></i>';
+                div.appendChild(buttonRemove);
+    
+                buttonRemove.addEventListener("click", () => {
+                    div.remove();
+                    tasks = tasks.filter(t => t !== task);
+                    saveTasks();
+                });
+    
+                let list = document.querySelector(task.type === Type.Todo ? "#todo-list" : "#done-list");
+                list.appendChild(div);
+            }
+    
+            window.addEventListener("load", () => {
+                loadTasks();
+            });
+    
             let button = document.querySelector("#add");
-
             button.addEventListener("click", () => {
                 // 1. Read the text in #task-input.
                 let input = document.querySelector("#task-input");
-                let task = input.value;
-                
-                if (!task.length) return;
-
-                // 2. Append the text to #todo-list.
-                let newTask = document.createElement("div");
-                newTask.classList.add("task", "bg-light", "p-1", "rounded-2", "ps-2");
-                newTask.textContent = task;
-
-                let todoList = document.querySelector("#todo-list");
-                todoList.appendChild(newTask)
-
-                // 3. Clear #task-input.
+                let text = input.value;
+    
+                if (!text.length) return;
+    
+                // 2. Create a new Task object.
+                let task = {
+                    text: text,
+                    type: Type.Todo
+                };
+    
+                // 3. Append the new Task object to tasks						
+                tasks.push(task);
+                saveTasks();
+    
+                // 4. Create a new task item and attach it to #todo-list.
+                addToList(task);
+    
+                // 5. Clear #task-input.
                 input.value = "";
-            })
+            });
         </script>
     </body>
 </html>
